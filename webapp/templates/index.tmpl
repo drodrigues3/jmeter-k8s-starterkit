@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Jmeter Kubernetes</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	 <style>
+
+        .navbar-brand {
+            color: white;
+            margin: 0 auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Jmeter Kubernetes</a>
+    </nav>
+
+    <div class="container my-5">
+        <form id="test-form" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file-upload">Upload test file:</label>
+                <input type="file" class="d-none form-control-file" id="file-upload" name="file-upload" required>
+            </div>
+
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="options-checkbox">
+                <label class="form-check-label" for="options-checkbox">Advanced options</label>
+            </div>
+
+            <div class="form-group">
+                <label for="jmx-file">JMX file:</label>
+                <input type="text" class="form-control" id="jmx-file" name="jmx-file" placeholder="Enter JMX file path" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="namespace">Namespace:</label>
+                <input type="text" class="form-control" id="namespace" name="namespace" placeholder="Enter namespace" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="csv-split">CSV split:</label>
+                <input type="text" class="form-control" id="csv-split" name="csv-split" placeholder="Enter CSV split" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="injector-number">Injector number:</label>
+                <input type="text" class="form-control" id="injector-number" name="injector-number" placeholder="Enter injector number" disabled>
+            </div>
+
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="enable-report" disabled>
+                <label class="form-check-label" for="enable-report">Enable report generation</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submit-button">Submit</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#options-checkbox').change(function() {
+                var isChecked = $(this).is(':checked');
+                $('#jmx-file').prop('disabled', !isChecked);
+                $('#namespace').prop('disabled', !isChecked);
+                $('#csv-split').prop('disabled', !isChecked);
+                $('#injector-number').prop('disabled', !isChecked);
+                $('#enable-report').prop('disabled', !isChecked);
+            });
+        });
+    </script>
+</body>
+</html>
