@@ -10,7 +10,9 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 
+	"github.com/drodrigues3/jmeter-k8s-starterkit/handlers"
 	"github.com/gin-gonic/gin"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
@@ -19,6 +21,7 @@ import (
 )
 
 func main() {
+
 	// Initialize the Gin router
 	router := gin.Default()
 
@@ -28,9 +31,42 @@ func main() {
 		c.HTML(http.StatusOK, "index.tmpl", nil)
 	})
 
+	// Handle with run operation
+	router.POST("/pre-run", func(c *gin.Context) {
+		handlers.PreRun(c)
+	})
+	// Handle with run operation
+	router.GET("/run", func(c *gin.Context) {
+		handlers.Run(c)
+	})
+
 	// Handle file uploads
 	router.POST("/upload", func(c *gin.Context) {
 		handleUpload(c.Writer, c.Request)
+	})
+
+	router.GET("/events", func(c *gin.Context) {
+		flusher := c.Writer.(http.Flusher)
+
+		c.Header("Content-Type", "text/event-stream")
+		c.Header("Cache-Control", "no-cache")
+		c.Header("Connection", "keep-alive")
+		c.Header("Access-Control-Allow-Origin", "*")
+
+		ticker := time.NewTicker(1 * time.Second)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-ticker.C:
+				data := fmt.Sprintf("data: %s\n\n", time.Now().Format("2006-01-02 15:04:05"))
+				fmt.Fprintf(c.Writer, data)
+				flusher.Flush()
+			case <-c.Request.Context().Done():
+				fmt.Println("Connection closed")
+				return
+			}
+		}
 	})
 
 	// Start the server
@@ -86,7 +122,6 @@ func extractTGZFile(file *os.File, dest string) error {
 	return nil
 }
 
-// Retrieve logs from a pod and write them to the specified writer.
 // Retrieve logs from a pod and write them to the specified writer.
 func retrieveLogsFromPod(podName string, containerName string, writer io.Writer) error {
 	// Get a Kubernetes client configuration

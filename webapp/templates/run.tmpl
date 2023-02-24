@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Jmeter Kubernetes</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+	 <style>
+
+        .navbar-brand {
+            color: white;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .terminal-container {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Ubuntu Mono', monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 20px;
+            overflow: auto;
+            box-sizing: border-box;
+            border: 1px solid #333;
+        }
+        .status {
+            font-size: 24px;
+            margin-bottom: 0px;
+            margin-top: 2%;
+            margin-left: 10%;
+        }
+
+        #status.ok {
+            color: black;
+        }
+        #status.nok {
+            color: red;
+        }
+        .fade-out-in {
+            animation: fade-out-in 2s ease-in-out infinite;
+        }
+
+        @keyframes fade-out-in {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            margin-right: 7px;
+            border: 7px solid #f3f3f3; /* Light grey */
+            border-top: 5px solid #3498db; /* Blue */
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+            margin-left: 0;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .comand-line {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Jmeter Kubernetes</a>
+    </nav>
+    <div class="container-fluid align-items-center">
+         <div class="d-flex align-items-left justify-content-left status" style="height: 15vh;">
+         <div class="loader"></div>
+         <p id="status" class="fade-out-in"> Running </p>
+            
+         </div>
+        <div class="d-flex  justify-content-center comand-line" style="height: 100vh;">
+            <div id="runLog" class="terminal-container" style="width: 80%; height: 50%; overflow-y: scroll;">
+                {{printf "Options: %s" .JmxFile}}
+            </div>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+   
+	<script>
+
+		// Create a new EventSource object and connect to the SSE endpoint
+		const source = new EventSource("/events");
+
+		// Set up the event listener for SSE messages
+		source.addEventListener("message", function(event) {
+            chageStatusText("Running", code=200)
+			// Get the message from the event data
+			const message = event.data;
+
+			// Append the message to the messages div
+            addContent(message);
+		});
+
+        
+        source.addEventListener('error', function(event) {
+            if (event.target.readyState === EventSource.CLOSED) {
+                chageStatusText("Closed")
+                addContent("Connection closed" , code=0);
+            } else if (event.target.readyState === EventSource.CONNECTING) {
+                chageStatusText("Reconnecting",  code=0)
+                addContent("Reconnecting with server ...");
+            } else if (event.target.readyState === EventSource.OPEN) {
+                chageStatusText("Closed",  code=0)
+                addContent("Connection reset");
+            }
+        });
+        const runLog = document.getElementById('runLog');
+
+        function addContent(content) {
+            // Add content to the div
+            runLog.innerHTML += content + "<br>";
+
+            // Scroll to the bottom of the div
+            runLog.scrollTop = runLog.scrollHeight;
+        }
+
+        const status = document.querySelector('#status');
+        function  chageStatusText(content, code=200) {
+            if (code == 200){
+                status.classList.add("ok")
+                status.classList.remove("nok")
+            } else {
+                status.classList.add("nok")
+            }
+            status.innerHTML = content;
+    
+        }
+      
+	</script>
+</body>
+</html>
