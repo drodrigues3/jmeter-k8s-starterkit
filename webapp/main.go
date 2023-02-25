@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/drodrigues3/jmeter-k8s-starterkit/config"
 	"github.com/drodrigues3/jmeter-k8s-starterkit/handlers"
 	"github.com/gin-gonic/gin"
 	corev1 "k8s.io/api/core/v1"
@@ -21,6 +22,12 @@ import (
 )
 
 func main() {
+
+	// Load configurations
+	cfg, err := config.LoadConfiguration()
+	if err != nil {
+		panic(err)
+	}
 
 	// Initialize the Gin router
 	router := gin.Default()
@@ -70,7 +77,7 @@ func main() {
 	})
 
 	// Start the server
-	router.Run(":8080")
+	router.Run(cfg.Server.Host + ":" + cfg.Server.Port)
 }
 
 // Extract the contents of a TGZ file to the specified directory.
