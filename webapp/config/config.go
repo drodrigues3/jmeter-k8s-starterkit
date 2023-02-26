@@ -1,6 +1,16 @@
 package config
 
-import "github.com/ilyakaznacheev/cleanenv"
+import (
+	"sync"
+
+	"github.com/ilyakaznacheev/cleanenv"
+)
+
+var (
+	cfg  Config
+	once sync.Once
+	err  error
+)
 
 type Server struct {
 	Host string `env:"HOST" env-default:"127.0.0.1"`
@@ -16,14 +26,23 @@ type InfluxConn struct {
 	Token    string `env:"INFLUX_TOKEN"`
 }
 
+type LogLevel struct {
+	Level int `env:"LOG_LEVEL" env-default:"1"`
+}
+
 type Config struct {
 	Server     Server
 	InfluxConn InfluxConn
+	LogLevel   LogLevel
 }
 
 func LoadConfiguration() (*Config, error) {
-	var cfg Config
-	err := cleanenv.ReadEnv(&cfg)
+
+	once.Do(func() {
+
+		err = cleanenv.ReadEnv(&cfg)
+	})
+
 	if err != nil {
 		return nil, err
 	}

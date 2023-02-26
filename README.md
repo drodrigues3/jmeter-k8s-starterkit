@@ -16,7 +16,7 @@ Thanks to [Kubernauts](https://github.com/kubernauts/jmeter-kubernetes) for the 
 
 ## Features
 
-<p align="center"><a href="https://ibb.co/ccM9RJp"><img src="https://i.ibb.co/0j8L1qW/jmeter-starterkit.jpg" alt="jmeter-starterkit" border="0" /></a></p>
+
 
 | Feature     | Supported    | Comment    |
 |-------------|:------------:|-------------

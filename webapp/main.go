@@ -14,6 +14,7 @@ import (
 
 	"github.com/drodrigues3/jmeter-k8s-starterkit/config"
 	"github.com/drodrigues3/jmeter-k8s-starterkit/handlers"
+	"github.com/drodrigues3/jmeter-k8s-starterkit/log"
 	"github.com/gin-gonic/gin"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
@@ -26,7 +27,7 @@ func main() {
 	// Load configurations
 	cfg, err := config.LoadConfiguration()
 	if err != nil {
-		panic(err)
+		log.Panic().Msg("Error when try load configuration")
 	}
 
 	// Initialize the Gin router
