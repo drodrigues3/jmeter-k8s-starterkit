@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Jmeter Kubernetes</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+     <style>
+
+        .navbar-brand {
+            color: white;
+            margin: 0 auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Jmeter Kubernetes</a>
+    </nav>
+
+    <div class="container my-5">
+        {{ if .error_type }}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>ERROR!</strong> {{ .error_type }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {{ end }}
+
+        <form id="upload-form" action="/upload" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            
+            <div class="form-group">
+                <label for="jmx-file">Select JMX file:</label>
+                <input type="file" class="form-control" id="jmx-file" name="jmx-file" placeholder="Enter JMX file path" aria-describedby="inputGroupPrepend" required>
+                <div class="invalid-feedback">
+                Please select a JMX file.
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="submit-button">Upload</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
+    <script>
+    (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+    </script>
+</body>
+</html>

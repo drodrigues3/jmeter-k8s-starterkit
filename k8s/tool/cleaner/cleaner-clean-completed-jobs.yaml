@@ -64,7 +64,7 @@ spec:
           serviceAccountName: cleaner
           containers:
           - name: kubectl-container
-            image: bitnami/kubectl:latest
+            JMXFiles: bitnami/kubectl:latest
             command: ["sh", "/tmp/clean.sh"]
             volumeMounts:
             - name: cleaner-script

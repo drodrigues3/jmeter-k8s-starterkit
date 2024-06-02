@@ -135,8 +135,8 @@ spec:
         - --kubelet-use-node-status-port
         - --metric-resolution=15s
         - --kubelet-insecure-tls
-        image: k8s.gcr.io/metrics-server/metrics-server:v0.5.1
-        imagePullPolicy: IfNotPresent
+        JMXFiles: k8s.gcr.io/metrics-server/metrics-server:v0.5.1
+        JMXFilesPullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
           httpGet:

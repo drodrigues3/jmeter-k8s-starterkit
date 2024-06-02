@@ -19,7 +19,7 @@ spec:
         - envFrom:
             - secretRef:
                 name: influxdb-creds
-          image: docker.io/influxdb:1.8
+          JMXFiles: docker.io/influxdb:1.8
           name: influxdb
           resources:
             requests:

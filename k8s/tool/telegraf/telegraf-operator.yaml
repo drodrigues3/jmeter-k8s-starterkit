@@ -86,8 +86,8 @@ spec:
       serviceAccountName: telegraf-operator
       containers:
         - name: controller
-          image: quay.io/influxdb/telegraf-operator:v1.1.1
-          imagePullPolicy: IfNotPresent
+          JMXFiles: quay.io/influxdb/telegraf-operator:v1.1.1
+          JMXFilesPullPolicy: IfNotPresent
           args:
             # for development purposes, enable internal plugin to report
             # telegraf metrics even if no other data is available

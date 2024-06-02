@@ -73,8 +73,8 @@ spec:
         fsGroup: 1000
       containers:
       - name: jmmaster
-        image: rbillon59/jmeter-k8s-base:5.4.1
-        imagePullPolicy: Always
+        JMXFiles: rbillon59/jmeter-k8s-base:5.4.1
+        JMXFilesPullPolicy: Always
         volumeMounts:
             - mountPath: /report
               name: jmeter-data-dir

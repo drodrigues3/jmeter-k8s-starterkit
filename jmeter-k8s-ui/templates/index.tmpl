@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Jmeter Kubernetes</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	 <style>
+
+        .navbar-brand {
+            color: white;
+            margin: 0 auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Jmeter Kubernetes</a>
+    </nav>
+
+    <div class="container my-5">
+        {{ if .success_type }}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>SUCCESS!</strong> {{ .success_type }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {{ end }}
+        {{ if .error_type }}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>ERROR!</strong> {{ .error_type }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {{ end }}
+        <form id="jmeter-options" action="/pre-run" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+            
+            <div class="form-group">
+                <label for="jmx-file">Select JMX file:</label>
+                <div class="invalid-feedback">
+                Please enter with a s3 bucket name/path to the JMX file.
+                </div>
+                {{if .JMXFiles }} 
+                <select class="form-select" aria-label="Select JMX file" name="jmx-file" >
+                    <option selected>Select one JMX file</option>
+                   
+                    {{ range .JMXFiles }}
+                    
+                     <option value="{{ .ID }}">{{ .NameFile }}</option>
+                    {{end}}
+                
+                </select>
+                {{else}} 
+                <select  class="form-select" aria-label="Select JMX file" onchange="location = this.value;">
+                    <option value="/upload" selected >Select one option</option>
+                    <option value="/upload">Upload New File</option>
+                </select>
+                {{ end }}
+                <p><a href="/upload">Upload New File </a></p>
+            </div>
+            <div class="form-group">
+                <label for="namespace">Namespace:</label>
+                <input type="text" class="form-control" id="namespace" name="namespace" placeholder="Enter namespace" value="default" required>
+                <div class="invalid-feedback">
+                Please enter with a valid namespace
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="csv-split">CSV split:</label>
+                <input type="number" class="form-control" id="csv-split" name="csv-split" placeholder="Enter CSV split" required>
+                <div class="invalid-feedback">
+                    Please enter with a valid number
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="injector-number">Injector number:</label>
+                <input type="number" class="form-control" id="injector-number" name="injector-number" placeholder="Enter injector number" required>
+                <div class="invalid-feedback">
+                    Please enter with a valid number
+                </div>
+            </div>
+            <div class="form-group">
+                <br>
+                <label for="injector-number"><p>Files that will be copy to jmeter client:</p></label>
+                    <ul class="list-group">
+                    {{if .CsvFiles }} 
+                        {{ range .CsvFiles }}
+                        <li class="list-group-item">{{ . }}</li>
+                        {{end}}
+                    {{else}} 
+                        <li class="list-group-item">No file available</li>
+                    {{end}}
+
+                </ul>
+            </div>
+
+            <div class="form-check form-switch">
+                <br>
+                <input class="form-check-input" type="checkbox" name="enable-report" id="enable-report" checked>
+                <label class="form-check-label" for="enable-report">Enable report generation.</label>
+            </div>
+
+
+            <button type="submit" class="btn btn-primary" id="submit-button">Start Test</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+    (function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+    </script>
+</body>
+</html>
