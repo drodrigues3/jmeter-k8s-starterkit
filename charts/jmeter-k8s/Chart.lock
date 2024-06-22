@@ -1,0 +1,12 @@
+dependencies:
+- name: loki-stack
+  repository: https://grafana.github.io/helm-charts
+  version: 2.10.2
+- name: metrics-server
+  repository: https://kubernetes-sigs.github.io/metrics-server/
+  version: 3.12.1
+- name: influxdb2
+  repository: https://helm.influxdata.com/
+  version: 2.1.1
+digest: sha256:dea668e802b7d9941befa0c480c6c01fbe06d22a88ac33712eccfb33d10aec13
+generated: "2024-06-21T22:24:54.1236865-03:00"
